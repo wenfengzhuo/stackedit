@@ -26,6 +26,7 @@ import constants from '../data/constants';
 Vue.use(Vuex);
 
 const debug = NODE_ENV !== 'production';
+const isImage = path => path.lastIndexOf('.png') >= 0 || path.lastIndexOf('.jpg') >= 0 || path.lastIndexOf('.jpeg') >= 0;
 
 const store = new Vuex.Store({
   modules: {
@@ -113,13 +114,23 @@ const store = new Vuex.Store({
           result[id] = `.stackedit-data/${id}.json`;
         } else if (item.type === 'file') {
           const filePath = pathsByItemId[id];
-          result[id] = `${filePath}.md`;
-          result[`${id}/content`] = `/${filePath}.md`;
+          if (isImage(filePath)) {
+            result[id] = filePath;
+            result[`${id}/content`] = filePath;
+          } else {
+            result[id] = `${filePath}.md`;
+            result[`${id}/content`] = `/${filePath}.md`;
+          }
         } else if (item.type === 'content') {
           const [fileId] = id.split('/');
           const filePath = pathsByItemId[fileId];
-          result[fileId] = `${filePath}.md`;
-          result[id] = `/${filePath}.md`;
+          if (isImage(filePath)) {
+            result[fileId] = filePath;
+            result[id] = filePath;
+          } else {
+            result[fileId] = `${filePath}.md`;
+            result[id] = `/${filePath}.md`;
+          }
         } else if (item.type === 'folder') {
           result[id] = pathsByItemId[id];
         } else if (item.type === 'syncLocation' || item.type === 'publishLocation') {

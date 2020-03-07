@@ -3,6 +3,9 @@ import utils from '../services/utils';
 
 const endsWith = (str, suffix) => str.slice(-suffix.length) === suffix;
 
+const isImage = path => endsWith(path, '.png') || endsWith(path, '.jpg') || endsWith(path, '.jpeg');
+const getFileName = (path, parLen) => (isImage(path) ? path.substring(parLen) : path.slice(parLen, -'.md'.length));
+
 export default {
   shaByPath: Object.create(null),
   makeChanges(tree) {
@@ -35,6 +38,8 @@ export default {
           });
           // Collect file path
           if (endsWith(path, '.md')) {
+            treeFileMap[path] = parentPath;
+          } else if (isImage(path)) {
             treeFileMap[path] = parentPath;
           } else if (endsWith(path, '.sync')) {
             treeSyncLocationMap[path] = true;
@@ -111,7 +116,7 @@ export default {
       const item = utils.addItemHash({
         id: fileId,
         type: 'file',
-        name: path.slice(parentPath.length, -'.md'.length),
+        name: getFileName(path, parentPath.length),
         parentId: idsByPath[parentPath] || null,
       });
 
@@ -206,7 +211,6 @@ export default {
               type,
               fileId,
             });
-
             const locationSyncData = syncDataByPath[path];
             if (!locationSyncData || locationSyncData.hash !== item.hash) {
               changes.push({
