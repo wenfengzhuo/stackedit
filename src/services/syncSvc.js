@@ -153,14 +153,17 @@ const applyChanges = (changes) => {
     const existingItem = getExistingItem(existingSyncData);
     // If item was removed
     if (!change.item && existingSyncData) {
-      if (syncDataById[change.syncDataId]) {
-        delete syncDataById[change.syncDataId];
-        saveSyncData = true;
-      }
-      if (existingItem) {
-        // Remove object from the store
-        store.commit(`${existingItem.type}/deleteItem`, existingItem.id);
-        delete allItemsById[existingItem.id];
+      console.log('was about to remove ', change);
+      if (false) {
+        if (syncDataById[change.syncDataId]) {
+          delete syncDataById[change.syncDataId];
+          saveSyncData = true;
+        }
+        if (existingItem) {
+          // Remove object from the store
+          store.commit(`${existingItem.type}/deleteItem`, existingItem.id);
+          delete allItemsById[existingItem.id];
+        }
       }
     // If item was modified
     } else if (change.item && change.item.hash) {

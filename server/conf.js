@@ -7,6 +7,7 @@ const paypalReceiverEmail = process.env.PAYPAL_RECEIVER_EMAIL;
 const dropboxAppKey = process.env.DROPBOX_APP_KEY;
 const dropboxAppKeyFull = process.env.DROPBOX_APP_KEY_FULL;
 const githubClientId = process.env.GITHUB_CLIENT_ID;
+console.log('githubClientId: ', process.env.GITHUB_CLIENT_ID);
 const githubClientSecret = process.env.GITHUB_CLIENT_SECRET;
 const googleClientId = process.env.GOOGLE_CLIENT_ID;
 const googleApiKey = process.env.GOOGLE_API_KEY;
