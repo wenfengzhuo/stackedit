@@ -28,6 +28,7 @@ import FilePropertiesModal from './modals/FilePropertiesModal';
 import SettingsModal from './modals/SettingsModal';
 import TemplatesModal from './modals/TemplatesModal';
 import AboutModal from './modals/AboutModal';
+import AboutmyModal from './modals/AboutmyModal';
 import HtmlExportModal from './modals/HtmlExportModal';
 import PdfExportModal from './modals/PdfExportModal';
 import PandocExportModal from './modals/PandocExportModal';
@@ -80,6 +81,7 @@ export default {
     SettingsModal,
     TemplatesModal,
     AboutModal,
+    AboutmyModal,
     HtmlExportModal,
     PdfExportModal,
     PandocExportModal,

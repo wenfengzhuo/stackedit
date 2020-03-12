@@ -176,6 +176,17 @@ const editorSvc = Object.assign(new Vue(), editorSvcDiscussions, editorSvcUtils,
             ...loadingImages,
             ...Array.prototype.slice.call(sectionPreviewElt.getElementsByTagName('img')),
           ];
+          const cw = store.getters['workspace/currentWorkspace'];
+          if (cw.providerId === 'githubWorkspace') {
+            loadingImages.forEach((img) => {
+              const githubRawHost = 'https://raw.githubusercontent.com';
+              if (!img.src.startsWith(githubRawHost)) {
+                const uri = img.src.substring(img.src.indexOf('://') + 3);
+                const imgName = uri.substring(uri.indexOf('/') + 1);
+                img.src = `${githubRawHost}/${cw.owner}/${cw.repo}/${cw.branch}/${imgName}`;
+              }
+            });
+          }
 
           // Create TOC section element
           sectionTocElt = document.createElement('div');
@@ -481,6 +492,11 @@ const editorSvc = Object.assign(new Vue(), editorSvcDiscussions, editorSvcUtils,
                 imgElt.style.display = '';
               };
               imgElt.src = uri;
+              const cw = store.getters['workspace/currentWorkspace'];
+              if (cw.providerId === 'githubWorkspace') {
+                const githubRawHost = 'https://raw.githubusercontent.com';
+                imgElt.src = `${githubRawHost}/${cw.owner}/${cw.repo}/${cw.branch}/${uri}`;
+              }
               // Take img size into account
               const sizeElt = imgTokenElt.querySelector('.token.cl-size');
               if (sizeElt) {
