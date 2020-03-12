@@ -121,6 +121,11 @@ export default {
     const tocElt = this.$el.querySelector('.toc__inner');
     editorSvc.init(editorElt, previewElt, tocElt);
 
+    if (!localStorage.hasShownAboutMy) {
+      store.dispatch('modal/open', 'aboutmy');
+      localStorage.hasShownAboutMy = true;
+    }
+
     // Focus on the editor every time reader mode is disabled
     const focus = () => {
       if (this.styles.showEditor) {

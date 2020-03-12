@@ -153,17 +153,14 @@ const applyChanges = (changes) => {
     const existingItem = getExistingItem(existingSyncData);
     // If item was removed
     if (!change.item && existingSyncData) {
-      console.log('was about to remove ', change);
-      if (false) {
-        if (syncDataById[change.syncDataId]) {
-          delete syncDataById[change.syncDataId];
-          saveSyncData = true;
-        }
-        if (existingItem) {
-          // Remove object from the store
-          store.commit(`${existingItem.type}/deleteItem`, existingItem.id);
-          delete allItemsById[existingItem.id];
-        }
+      if (syncDataById[change.syncDataId]) {
+        delete syncDataById[change.syncDataId];
+        saveSyncData = true;
+      }
+      if (existingItem) {
+        // Remove object from the store
+        store.commit(`${existingItem.type}/deleteItem`, existingItem.id);
+        delete allItemsById[existingItem.id];
       }
     // If item was modified
     } else if (change.item && change.item.hash) {
@@ -299,6 +296,8 @@ class SyncContext {
   attempted = {};
 }
 
+const isImage = file => file.endsWith('.png') || file.endsWith('.jpg') || file.endsWith('.jpeg');
+
 /**
  * Sync one file with all its locations.
  */
@@ -318,6 +317,11 @@ const syncFile = async (fileId, syncContext = new SyncContext()) => {
 
   try {
     if (isTempFile(fileId)) {
+      return;
+    }
+    const fileItem = store.getters.allItemsById[fileId];
+    // Do not sync images
+    if (isImage(fileItem.name)) {
       return;
     }
 
