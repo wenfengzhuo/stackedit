@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const env = require('./config/prod.env');
 
 Object.keys(env).forEach((key) => {
@@ -6,7 +8,7 @@ Object.keys(env).forEach((key) => {
   }
 });
 
-const http = require('http');
+const https = require('https');
 const express = require('express');
 
 const app = express();
@@ -14,9 +16,17 @@ const app = express();
 require('./server')(app, process.env.SERVE_V4);
 
 const port = parseInt(process.env.PORT || 8080, 10);
-const httpServer = http.createServer(app);
-httpServer.listen(port, null, () => {
-  console.log(`HTTP server started: http://localhost:${port}`);
+
+const httpsOptions = {
+  cert: fs.readFileSync('../ssl/mymarkdown_io.crt'),
+  ca: fs.readFileSync('../ssl/mymarkdown_io.ca-bundle'),
+  key: fs.readFileSync('../ssl/mymarkdown_io.key'),
+};
+
+const httpsServer = https.createServer(httpsOptions, app);
+
+httpsServer.listen(port, null, () => {
+  console.log(`HTTPS server started: https://localhost:${port}`);
 });
 
 // Handle graceful shutdown
