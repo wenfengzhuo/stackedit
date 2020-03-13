@@ -4,10 +4,17 @@ node_js:
   - "8"
 
 script: npm run build
+
+before_deploy:
+  - zip -r dist.zip dist
+  - git config --local user.name "wenfengzhuo"
+  - git config --local user.email "wenfengzhuo@gmail.com"
+  - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
+  - git tag $TRAVIS_TAG
   
 deploy:
   provider: releases
   api_key: "$GITHUB_API_TOKEN"
-  file_glob: true
-  file: dist/*
+  file: "dist.zip"
   skip_cleanup: true
+  
